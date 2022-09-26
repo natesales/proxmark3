@@ -171,6 +171,8 @@ void iclass_simulate(uint8_t sim_type, uint8_t num_csns, bool send_reply, uint8_
     // only logg if we are called from the client.
     set_tracing(send_reply);
 
+    LED_C_ON();
+
     //Use the emulator memory for SIM
     uint8_t *emulator = BigBuf_get_EM_addr();
     uint8_t mac_responses[PM3_CMD_DATA_SIZE] = { 0 };
@@ -896,7 +898,7 @@ send:
         }
     }
 
-    LEDsoff();
+//    LEDsoff();
 
     if (button_pressed)
         DbpString("button pressed");
@@ -1235,7 +1237,7 @@ send:
         }
     }
 
-    LEDsoff();
+//    LEDsoff();
 
     if (button_pressed)
         DbpString("button pressed");
