@@ -2139,7 +2139,7 @@ void SimTagIso15693(uint8_t *uid, uint8_t block_size) {
     bool exit_loop = false;
     while (exit_loop == false) {
 
-        button_pressed = BUTTON_PRESS();
+        // button_pressed = BUTTON_PRESS();
         if (button_pressed || data_available())
             break;
 

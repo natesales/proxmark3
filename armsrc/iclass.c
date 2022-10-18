@@ -896,7 +896,7 @@ send:
         }
     }
 
-    LEDsoff();
+    // LEDsoff();
 
     if (button_pressed)
         DbpString("button pressed");
@@ -1235,7 +1235,7 @@ send:
         }
     }
 
-    LEDsoff();
+    // LEDsoff();
 
     if (button_pressed)
         DbpString("button pressed");

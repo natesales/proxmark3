@@ -43,20 +43,21 @@
 #define ICE_STATE_ATTACK      2
 #define ICE_STATE_READER      3
 #define ICE_STATE_CONFIGCARD  4
-#define ICE_STATE_DUMP_SIM  5
+#define ICE_STATE_DUMP_SIM    5
+#define ICE_STATE_READ_SIM    6
 
-#define HF_ICLASS_NUM_MODES 6
+#define HF_ICLASS_NUM_MODES 7
 
 // ====================================================
 // Select which standalone function to be active.
 // 5 possibilities.  Uncomment the one you wanna use.
 
-#define ICE_USE               ICE_STATE_FULLSIM
+//#define ICE_USE               ICE_STATE_FULLSIM
 //#define ICE_USE               ICE_STATE_ATTACK
 //#define ICE_USE               ICE_STATE_READER
 //#define ICE_USE               ICE_STATE_CONFIGCARD
 //#define ICE_USE               ICE_STATE_DUMP_SIM
-
+#define ICE_USE     ICE_STATE_READ_SIM
 // ====================================================
 
 
@@ -717,6 +718,16 @@ void RunMod(void) {
 
                 mode = ICE_STATE_NONE;
                 break;
+            }
+            case ICE_STATE_READ_SIM: {
+                DbpString("Entering reader dump mode");
+                reader_dump_mode();
+                DbpString("Button pressed, debouncing...");
+                SpinDelay(1200);
+                DbpString("Entering fullsim mode");
+                fullsim_mode();
+                DbpString("Exiting fullsim mode");
+                LEDsoff();
             }
         }
     }
