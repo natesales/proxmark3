@@ -1514,10 +1514,10 @@ int GetIso15693CommandFromReader(uint8_t *received, size_t max_len, uint32_t *eo
             break;
         }
 
-         if (BUTTON_PRESS()) {
-             dr->byteCount = -1;
-             break;
-         }
+        if (BUTTON_PRESS()) {
+            dr->byteCount = -1;
+            break;
+        }
 
         WDT_HIT();
     }
@@ -2139,7 +2139,7 @@ void SimTagIso15693(uint8_t *uid, uint8_t block_size) {
     bool exit_loop = false;
     while (exit_loop == false) {
 
-        button_pressed = false; // BUTTON_PRESS(); // Nate 9/24 - I disabled this button press
+        button_pressed = BUTTON_PRESS();
         if (button_pressed || data_available())
             break;
 

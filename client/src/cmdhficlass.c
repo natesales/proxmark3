@@ -3759,7 +3759,6 @@ static int CmdHFiClassEncode(const char *Cmd) {
         arg_u64_0(NULL, "fc", "<dec>", "facility code"),
         arg_u64_0(NULL, "cn", "<dec>", "card number"),
         arg_str0("w",   "wiegand", "<format>", "see " _YELLOW_("`wiegand list`") " for available formats"),
-        arg_lit0(NULL, "print", "print blocks instead of writing"),
         arg_param_end
     };
     CLIExecWithReturn(ctx, Cmd, argtable, false);
@@ -3920,16 +3919,10 @@ static int CmdHFiClassEncode(const char *Cmd) {
     }
 
     int isok = PM3_SUCCESS;
-
-    if (print_blocks) {
-        for (uint8_t i = 0; i < 4; i++) {
+    for (uint8_t i = 0; i < 4; i++) {
+        if (print_blocks) {
             PrintAndLogEx(SUCCESS, "Block %d/0x0%x -> " _YELLOW_("%s"), 6 + i, 6 + i, sprint_hex_inrow(credential + (i * 8), 8));
-        }
-
-        return PM3_SUCCESS;
-    } else {
-        // write
-        for (uint8_t i = 0; i < 4; i++) {
+        } else {
             isok = iclass_write_block(6 + i, credential + (i * 8), NULL, key, use_credit_key, elite, rawkey, false, false, auth);
             switch (isok) {
                 case PM3_SUCCESS:
@@ -3941,7 +3934,6 @@ static int CmdHFiClassEncode(const char *Cmd) {
             }
         }
     }
-
     return isok;
 }
 

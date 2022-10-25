@@ -221,7 +221,6 @@ static int fullsim_mode(void) {
         Dbprintf("loaded " _GREEN_(HF_ICLASS_FULLSIM_ORIG_BIN) " (%u bytes)", fsize);
     }
 
-    Dbprintf("Simming " _GREEN_(HF_ICLASS_FULLSIM_ORIG_BIN));
     iclass_simulate(ICLASS_SIM_MODE_FULL, 0, false, NULL, NULL, NULL);
 
     LED_B_ON();
@@ -644,7 +643,7 @@ void RunMod(void) {
 
     for (;;) {
 
-        // WDT_HIT();
+        WDT_HIT();
 
         if (mode == ICE_STATE_NONE) break;
         if (data_available()) break;
@@ -729,8 +728,6 @@ void RunMod(void) {
                 fullsim_mode();
                 DbpString("Exiting fullsim mode");
                 LEDsoff();
-                mode = ICE_STATE_NONE;
-                break;
             }
         }
     }
