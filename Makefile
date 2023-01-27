@@ -34,7 +34,7 @@ all clean install uninstall check: %: client/% bootrom/% armsrc/% recovery/% mfk
 #all clean install uninstall check: %: hitag2crack/%
 
 INSTALLTOOLS=pm3_eml2lower.sh pm3_eml2upper.sh pm3_mfdread.py pm3_mfd2eml.py pm3_eml2mfd.py pm3_amii_bin2eml.pl pm3_reblay-emulating.py pm3_reblay-reading.py
-INSTALLSIMFW=sim011.bin sim011.sha512.txt
+INSTALLSIMFW=sim011.bin sim011.sha512.txt sim013.bin sim013.sha512.txt
 INSTALLSCRIPTS=pm3 pm3-flash pm3-flash-all pm3-flash-bootrom pm3-flash-fullimage
 INSTALLSHARES=tools/jtag_openocd traces
 INSTALLDOCS=doc/*.md doc/md
@@ -80,20 +80,20 @@ ifneq (,$(INSTALLSHARES))
 endif
 ifneq (,$(INSTALLDOCS))
 	$(Q)$(INSTALLSUDO) $(RMDIR) $(foreach doc,$(INSTALLDOCS),$(DESTDIR)$(PREFIX)$(PATHSEP)$(INSTALLDOCSRELPATH)$(PATHSEP)$(notdir $(doc)))
-	$(Q)$(INSTALLSUDO) $(RMDIR_SOFT) $(DESTDIR)$(PREFIX)$(PATHSEP)$(INSTALLDOCSRELPATH)
+	$(Q)-$(INSTALLSUDO) $(RMDIR_SOFT) $(DESTDIR)$(PREFIX)$(PATHSEP)$(INSTALLDOCSRELPATH)
 endif
 ifneq (,$(INSTALLTOOLS))
 	$(Q)$(INSTALLSUDO) $(RM) $(foreach tool,$(INSTALLTOOLS),$(DESTDIR)$(PREFIX)$(PATHSEP)$(INSTALLTOOLSRELPATH)$(PATHSEP)$(notdir $(tool)))
 endif
-	$(Q)$(INSTALLSUDO) $(RMDIR_SOFT) $(DESTDIR)$(PREFIX)$(PATHSEP)$(INSTALLTOOLSRELPATH)
+	$(Q)-$(INSTALLSUDO) $(RMDIR_SOFT) $(DESTDIR)$(PREFIX)$(PATHSEP)$(INSTALLTOOLSRELPATH)
 ifneq (,$(INSTALLSIMFW))
 	$(Q)$(INSTALLSUDO) $(RM) $(foreach fw,$(INSTALLSIMFW),$(DESTDIR)$(PREFIX)$(PATHSEP)$(INSTALLFWRELPATH)$(PATHSEP)$(notdir $(fw)))
 endif
-	$(Q)$(INSTALLSUDO) $(RMDIR_SOFT) $(DESTDIR)$(PREFIX)$(PATHSEP)$(INSTALLFWRELPATH)
+	$(Q)-$(INSTALLSUDO) $(RMDIR_SOFT) $(DESTDIR)$(PREFIX)$(PATHSEP)$(INSTALLFWRELPATH)
 ifeq ($(platform),Linux)
 	$(Q)$(INSTALLSUDO) $(RM) $(DESTDIR)$(UDEV_PREFIX)/77-pm3-usb-device-blacklist.rules
 endif
-	$(Q)$(INSTALLSUDO) $(RMDIR_SOFT) $(DESTDIR)$(PREFIX)$(PATHSEP)$(INSTALLSHARERELPATH)
+	$(Q)-$(INSTALLSUDO) $(RMDIR_SOFT) $(DESTDIR)$(PREFIX)$(PATHSEP)$(INSTALLSHARERELPATH)
 
 # tests
 mfkey/check: FORCE
@@ -266,6 +266,10 @@ accessrights:
 ifneq ($(wildcard /etc/arch-release),)
 #If user is running ArchLinux, use specific command and group
 	$(Q)$(SUDO) $(USERMOD) uucp $(USER)
+	$(Q)$(GETENT_BL) >/dev/null && $(SUDO) $(USERMOD) bluetooth $(USER) || true
+else ifneq ($(wildcard /etc/fedora-release),)
+# If the user is running Fedora, use `usermod` with the dialout group
+	$(Q)$(SUDO) $(USERMOD) dialout $(USER)
 	$(Q)$(GETENT_BL) >/dev/null && $(SUDO) $(USERMOD) bluetooth $(USER) || true
 else
 	$(Q)$(SUDO) $(ADDUSER) $(USER) dialout

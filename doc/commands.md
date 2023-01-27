@@ -275,7 +275,8 @@ Check column "offline" for their availability.
 |-------                  |------- |-----------
 |`hf epa help            `|Y       |`This help`
 |`hf epa cnonces         `|N       |`Acquire encrypted PACE nonces of specific size`
-|`hf epa preplay         `|N       |`Perform PACE protocol by replaying given APDUs`
+|`hf epa replay          `|N       |`Perform PACE protocol by replaying given APDUs`
+|`hf epa sim             `|N       |`Simulate PACE protocol`
 
 
 ### hf emrtd
@@ -366,11 +367,11 @@ Check column "offline" for their availability.
 |command                  |offline |description
 |-------                  |------- |-----------
 |`hf ksx6924 help        `|Y       |`This help`
-|`hf ksx6924 balance     `|N       |`Get current purse balance`
-|`hf ksx6924 info        `|N       |`Get info about a KS X 6924 (T-Money, Snapper+) transit card`
-|`hf ksx6924 initialize  `|N       |`Perform transaction initialization (Mpda)`
-|`hf ksx6924 prec        `|N       |`Send proprietary get record command (CLA=90, INS=4C)`
 |`hf ksx6924 select      `|N       |`Select application, and leave field up`
+|`hf ksx6924 info        `|N       |`Get info about a KS X 6924 (T-Money, Snapper+) transit card`
+|`hf ksx6924 balance     `|N       |`Get current purse balance`
+|`hf ksx6924 init        `|N       |`Perform transaction initialization with Mpda`
+|`hf ksx6924 prec        `|N       |`Send proprietary get record command (CLA=90, INS=4C)`
 
 
 ### hf jooki
@@ -509,6 +510,10 @@ Check column "offline" for their availability.
 |`hf mf gen3uid          `|N       |`Set UID without changing manufacturer block`
 |`hf mf gen3blk          `|N       |`Overwrite manufacturer block`
 |`hf mf gen3freeze       `|N       |`Perma lock UID changes. irreversible`
+|`hf mf ggetblk          `|N       |`Read block from card`
+|`hf mf gload            `|N       |`Load dump to card`
+|`hf mf gsave            `|N       |`Save dump from card into file or emulator`
+|`hf mf gsetblk          `|N       |`Write block to card`
 |`hf mf gview            `|N       |`View card`
 |`hf mf ndefformat       `|N       |`Format MIFARE Classic Tag as NFC Tag`
 |`hf mf ndefread         `|N       |`Read and print NDEF records from card`
@@ -553,7 +558,8 @@ Check column "offline" for their availability.
 |`hf mfu restore         `|N       |`Restore a dump onto a MFU MAGIC tag`
 |`hf mfu view            `|Y       |`Display content from tag dump file`
 |`hf mfu wrbl            `|N       |`Write block`
-|`hf mfu eload           `|N       |`Load Ultralight .eml dump file into emulator memory`
+|`hf mfu eload           `|N       |`Load Ultralight dump file into emulator memory`
+|`hf mfu esave           `|N       |`Save Ultralight dump file from emulator memory`
 |`hf mfu eview           `|N       |`View emulator memory`
 |`hf mfu sim             `|N       |`Simulate MIFARE Ultralight from emulator memory`
 |`hf mfu setpwd          `|N       |`Set 3DES key - Ultralight-C`
@@ -645,6 +651,28 @@ Check column "offline" for their availability.
 |`hf st25ta sim          `|N       |`Fake ISO 14443A/ST tag`
 
 
+### hf tesla
+
+ { TESLA Cards...                      }
+
+|command                  |offline |description
+|-------                  |------- |-----------
+|`hf tesla help          `|Y       |`This help`
+|`hf tesla info          `|N       |`Tag information`
+|`hf tesla list          `|Y       |`List ISO 14443A/7816 history`
+
+
+### hf texkom
+
+ { Texkom RFIDs...                     }
+
+|command                  |offline |description
+|-------                  |------- |-----------
+|`hf texkom help         `|Y       |`This help`
+|`hf texkom reader       `|N       |`Act like a Texkom reader`
+|`hf texkom sim          `|N       |`Simulate a Texkom tag`
+
+
 ### hf thinfilm
 
  { Thinfilm RFIDs...                   }
@@ -674,17 +702,6 @@ Check column "offline" for their availability.
 |`hf topaz rdbl          `|N       |`Read block`
 |`hf topaz view          `|Y       |`Display content from tag dump file`
 |`hf topaz wrbl          `|N       |`Write block`
-
-
-### hf texkom
-
- { Texkom RFIDs...                     }
-
-|command                  |offline |description
-|-------                  |------- |-----------
-|`hf texkom help         `|Y       |`This help`
-|`hf texkom reader       `|N       |`Act like a Texkom reader`
-|`hf texkom sim          `|N       |`Simulate a Texkom tag`
 
 
 ### hf xerox
@@ -970,6 +987,7 @@ Check column "offline" for their availability.
 |command                  |offline |description
 |-------                  |------- |-----------
 |`lf indala help         `|Y       |`This help`
+|`lf indala brute        `|N       |`Demodulate an Indala tag (PSK1) from the GraphBuffer`
 |`lf indala demod        `|Y       |`Demodulate an Indala tag (PSK1) from the GraphBuffer`
 |`lf indala altdemod     `|Y       |`Alternative method to demodulate samples for Indala 64 bit UID (option '224' for 224 bit)`
 |`lf indala reader       `|N       |`Read an Indala tag from the antenna`
@@ -1325,6 +1343,20 @@ Check column "offline" for their availability.
 |`nfc barcode read       `|N       |`read NFC Barcode`
 |`nfc barcode sim        `|N       |`simulate NFC Barcode`
 |`nfc barcode help       `|Y       |`This help`
+
+
+### piv
+
+ { PIV commands... }
+
+|command                  |offline |description
+|-------                  |------- |-----------
+|`piv help               `|Y       |`This help`
+|`piv select             `|N       |`Select the PIV applet`
+|`piv getdata            `|N       |`Gets a container on a PIV card`
+|`piv authsign           `|N       |`Authenticate with the card`
+|`piv scan               `|N       |`Scan PIV card for known containers`
+|`piv list               `|Y       |`List ISO7816 history`
 
 
 ### reveng

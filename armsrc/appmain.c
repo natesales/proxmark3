@@ -345,7 +345,7 @@ static void print_debug_level(void) {
     char dbglvlstr[20] = {0};
     switch (g_dbglevel) {
         case DBG_NONE:
-            sprintf(dbglvlstr, "none");
+            sprintf(dbglvlstr, "off");
             break;
         case DBG_ERROR:
             sprintf(dbglvlstr, "error");
@@ -1477,7 +1477,7 @@ static void PacketReceived(PacketCommandNG *packet) {
             EPA_PACE_Simulate(packet);
             break;
         }
-        
+
         case CMD_HF_MIFARE_READER: {
             struct p {
                 uint8_t first_run;
@@ -1651,9 +1651,22 @@ static void PacketReceived(PacketCommandNG *packet) {
             struct p {
                 uint8_t blockno;
                 uint8_t pwd[4];
+                uint8_t workFlags;
             } PACKED;
             struct p *payload = (struct p *) packet->data.asBytes;
-            MifareG4ReadBlk(payload->blockno, payload->pwd);
+            MifareG4ReadBlk(payload->blockno, payload->pwd, payload->workFlags);
+            break;
+        }
+        // Gen 4 GTU magic cards
+        case CMD_HF_MIFARE_G4_WRBL: {
+            struct p {
+                uint8_t blockno;
+                uint8_t pwd[4];
+                uint8_t data[16]; // data to be written
+                uint8_t workFlags;
+            } PACKED;
+            struct p *payload = (struct p *) packet->data.asBytes;
+            MifareG4WriteBlk(payload->blockno, payload->pwd, payload->data, payload->workFlags);
             break;
         }
         case CMD_HF_MIFARE_PERSONALIZE_UID: {
@@ -2319,22 +2332,22 @@ static void PacketReceived(PacketCommandNG *packet) {
             uint8_t *em = BigBuf_get_EM_addr();
             if (em == NULL) {
                 reply_ng(CMD_SPIFFS_ELOAD, PM3_EMALLOC, NULL, 0);
-                LED_B_OFF();            
+                LED_B_OFF();
                 break;
-            } 
+            }
 
             char *fn = (char *)packet->data.asBytes;
 
             uint32_t size = size_in_spiffs(fn);
             if (size == 0) {
                 reply_ng(CMD_SPIFFS_ELOAD, PM3_SUCCESS, NULL, 0);
-                LED_B_OFF();            
+                LED_B_OFF();
                 break;
             }
 
             rdv40_spiffs_read_as_filetype(fn, em, size, RDV40_SPIFFS_SAFETY_SAFE);
             reply_ng(CMD_SPIFFS_ELOAD, PM3_SUCCESS, NULL, 0);
-            LED_B_OFF();            
+            LED_B_OFF();
             break;
         }
         case CMD_FLASHMEM_SET_SPIBAUDRATE: {
@@ -2595,7 +2608,7 @@ void  __attribute__((noreturn)) AppMain(void) {
 #endif
 
 #ifdef WITH_SMARTCARD
-    I2C_init();
+    I2C_init(false);
 #endif
 
 #ifdef WITH_FPC_USART
