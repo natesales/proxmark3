@@ -47,7 +47,6 @@ static int mainret = PM3_ESOFT;
 typedef enum LogoMode { UTF8, ANSI, ASCII } LogoMode;
 
 static void showBanner_logo(LogoMode mode) {
-    return;
     switch (mode) {
         case UTF8: {
             const char *sq = "\xE2\x96\x88"; // square block
